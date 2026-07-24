@@ -1,0 +1,49 @@
+services:
+  app:
+    build: .
+    container_name: guestbook_app
+    ports:
+      - "8080:5000"
+    environment:
+      - DB_HOST: app
+      - DB_NAME: guestbook
+      - DB_USER: guestbook_user
+      - DB_PASSWORD: guestbook_password
+      - DB_PORT: "5432"
+    depends_on:
+      - db:
+        condition: service_healthy
+    restart: unless-stopped
+
+    networks:
+      - AppNet
+
+  db:
+    image: postgres:15-alpine
+    container_name: guestbook_db
+    ports:
+      - "5432:5432"
+    
+    environment:
+      POSTGRES_USER: guestbook_user
+      POSTGRES_PASSWORD: guestbook_password
+      POSTGRES_DB: guestbook
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U guestbook_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+    networks:
+      - AppNet
+
+volumes:
+  db-data:
+
+networks:
+  AppNet:
+    driver: bridge
