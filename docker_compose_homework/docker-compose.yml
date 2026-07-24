@@ -5,13 +5,13 @@ services:
     ports:
       - "8080:5000"
     environment:
-      - DB_HOST: app
-      - DB_NAME: guestbook
-      - DB_USER: guestbook_user
-      - DB_PASSWORD: guestbook_password
-      - DB_PORT: "5432"
+      DB_HOST: db
+      DB_NAME: guestbook
+      DB_USER: guestbook_user
+      DB_PASSWORD: guestbook_password
+      DB_PORT: "5432"
     depends_on:
-      - db:
+      db:
         condition: service_healthy
     restart: unless-stopped
 
