@@ -6,10 +6,10 @@ services:
       - "8080:5000"
     environment:
       DB_HOST: db
-      DB_NAME: guestbook
-      DB_USER: guestbook_user
-      DB_PASSWORD: guestbook_password
-      DB_PORT: "5432"
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
     depends_on:
       db:
         condition: service_healthy
@@ -25,12 +25,12 @@ services:
       - "5432:5432"
     
     environment:
-      POSTGRES_USER: guestbook_user
-      POSTGRES_PASSWORD: guestbook_password
-      POSTGRES_DB: guestbook
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U guestbook_user -d guestbook"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
